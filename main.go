@@ -66,7 +66,7 @@ func init() {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	log.Infoln("URL Query is %s",r.URL.Query())
+	log.Infoln("URL Query is %s", r.URL.Query())
 	target := r.URL.Query().Get("target")
 	if target == "" {
 		http.Error(w, "'target' parameter must be specified", 400)
