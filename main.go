@@ -87,6 +87,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Infof("Scraping target '%s' with module '%s'", target, moduleName)
+	q := r.URL.Query()
+	q.Del(stripKey)
+	r.URL.RawQuery = q.Encode()
 
 	start := time.Now()
 	registry := prometheus.NewRegistry()
