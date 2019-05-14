@@ -88,7 +88,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Infof("Scraping target '%s' with module '%s'", target, moduleName)
 	q := r.URL.Query()
-	q.Del(stripKey)
+	q.Del("module")
 	r.URL.RawQuery = q.Encode()
 	log.Infof("URL Query is now %s", r.URL.Query())
 	start := time.Now()
