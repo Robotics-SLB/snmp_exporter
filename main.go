@@ -90,7 +90,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	q.Del(stripKey)
 	r.URL.RawQuery = q.Encode()
-
+	log.Infof("URL Query is now %s", r.URL.Query())
 	start := time.Now()
 	registry := prometheus.NewRegistry()
 	collector := collector{target: target, module: module}
