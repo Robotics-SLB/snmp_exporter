@@ -102,7 +102,7 @@ func ScrapeTarget(target string, config *config.Module) ([]gosnmp.SnmpPDU, error
 
 	// Configure auth.
 	config.WalkParams.ConfigureSNMP(&snmp)
-
+	log.Infof("Starting Scrape %s", target)
 	// Do the actual walk.
 	err := snmp.Connect()
 	if err != nil {
@@ -123,16 +123,16 @@ func ScrapeTarget(target string, config *config.Module) ([]gosnmp.SnmpPDU, error
 			oids = maxOids
 		}
 
-		log.Debugf("Getting %d OIDs from target %q", oids, snmp.Target)
+		log.Infof("Getting %d OIDs from target %q", oids, snmp.Target)
 		getStart := time.Now()
 		packet, err := snmp.Get(getOids[:oids])
 		if err != nil {
 			return nil, fmt.Errorf("error getting target %s: %s", snmp.Target, err)
 		}
-		log.Debugf("Get of %d OIDs completed in %s", oids, time.Since(getStart))
+		log.Infof("Get of %d OIDs completed in %s", oids, time.Since(getStart))
 		// SNMPv1 will return packet error for unsupported OIDs.
 		if packet.Error == gosnmp.NoSuchName && snmp.Version == gosnmp.Version1 {
-			log.Debugf("OID %s not supported by target %s", getOids[0], snmp.Target)
+			log.Infof("OID %s not supported by target %s", getOids[0], snmp.Target)
 			getOids = getOids[oids:]
 			continue
 		}
@@ -143,7 +143,7 @@ func ScrapeTarget(target string, config *config.Module) ([]gosnmp.SnmpPDU, error
 		}
 		for _, v := range packet.Variables {
 			if v.Type == gosnmp.NoSuchObject || v.Type == gosnmp.NoSuchInstance {
-				log.Debugf("OID %s not supported by target %s", v.Name, snmp.Target)
+				log.Infof("OID %s not supported by target %s", v.Name, snmp.Target)
 				continue
 			}
 			result = append(result, v)
@@ -153,7 +153,7 @@ func ScrapeTarget(target string, config *config.Module) ([]gosnmp.SnmpPDU, error
 
 	for _, subtree := range config.Walk {
 		var pdus []gosnmp.SnmpPDU
-		log.Debugf("Walking target %q subtree %q", snmp.Target, subtree)
+		log.Infof("Walking target %q subtree %q", snmp.Target, subtree)
 		walkStart := time.Now()
 		if snmp.Version == gosnmp.Version1 {
 			pdus, err = snmp.WalkAll(subtree)
@@ -163,7 +163,7 @@ func ScrapeTarget(target string, config *config.Module) ([]gosnmp.SnmpPDU, error
 		if err != nil {
 			return nil, fmt.Errorf("error walking target %s: %s", snmp.Target, err)
 		}
-		log.Debugf("Walk of target %q subtree %q completed in %s", snmp.Target, subtree, time.Since(walkStart))
+		log.Infof("Walk of target %q subtree %q completed in %s", snmp.Target, subtree, time.Since(walkStart))
 
 		result = append(result, pdus...)
 	}
@@ -208,6 +208,7 @@ func (c collector) Collect(ch chan<- prometheus.Metric) {
 	log.Infof("Starting collector %s", c.target)
 	start := time.Now()
 	pdus, err := ScrapeTarget(c.target, c.module)
+	log.Infof("Scraped %s", c.target)
 	if err != nil {
 		log.Infof("Error scraping target %s: %s", c.target, err)
 		ch <- prometheus.NewInvalidMetric(prometheus.NewDesc("snmp_error", "Error scraping target", nil, nil), err)
