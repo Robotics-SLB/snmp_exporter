@@ -77,6 +77,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	if moduleName == "" {
 		moduleName = "if_mib"
 	}
+	log.Infof("Module name is %s", moduleName)
 	sc.RLock()
 	module, ok := (*(sc.C))[moduleName]
 	sc.RUnlock()
@@ -85,7 +86,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		snmpRequestErrors.Inc()
 		return
 	}
-	log.Debugf("Scraping target '%s' with module '%s'", target, moduleName)
+	log.Infof("Scraping target '%s' with module '%s'", target, moduleName)
 
 	start := time.Now()
 	registry := prometheus.NewRegistry()
@@ -96,7 +97,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	h.ServeHTTP(w, r)
 	duration := time.Since(start).Seconds()
 	snmpDuration.WithLabelValues(moduleName).Observe(duration)
-	log.Debugf("Scrape of target '%s' with module '%s' took %f seconds", target, moduleName, duration)
+	log.Infof("Scrape of target '%s' with module '%s' took %f seconds", target, moduleName, duration)
 }
 
 func updateConfiguration(w http.ResponseWriter, r *http.Request) {
