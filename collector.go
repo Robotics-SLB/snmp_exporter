@@ -205,6 +205,7 @@ func (c collector) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect implements Prometheus.Collector.
 func (c collector) Collect(ch chan<- prometheus.Metric) {
+	log.Infof("Starting collector %s", c.target)
 	start := time.Now()
 	pdus, err := ScrapeTarget(c.target, c.module)
 	if err != nil {
