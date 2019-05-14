@@ -226,8 +226,9 @@ func (c collector) Collect(ch chan<- prometheus.Metric) {
 	for _, pdu := range pdus {
 		oidToPdu[pdu.Name[1:]] = pdu
 	}
-
+	log.Infof("Building metric tree: %s", c.target)
 	metricTree := buildMetricTree(c.module.Metrics)
+	log.Infof("Done building metric tree: %s", c.target)
 	// Look for metrics that match each pdu.
 PduLoop:
 	for oid, pdu := range oidToPdu {
@@ -253,6 +254,7 @@ PduLoop:
 		prometheus.NewDesc("snmp_scrape_duration_seconds", "Total SNMP time scrape took (walk and processing).", nil, nil),
 		prometheus.GaugeValue,
 		time.Since(start).Seconds())
+	log.Infof("Done collecting: %s", c.target)
 }
 
 func getPduValue(pdu *gosnmp.SnmpPDU) float64 {
