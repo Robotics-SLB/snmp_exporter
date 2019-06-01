@@ -15,7 +15,7 @@ steps:
     cd generator
     make mibs
     docker build -t snmp-generator .
-    docker run -ti -v "${PWD}:/opt/" snmp-generator generate
+    docker run -v "${PWD}:/opt/" snmp-generator generate
     ls -l
     cp snmp.yml ../
   displayName: 'Build snmp.yml'
