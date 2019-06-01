@@ -20,7 +20,7 @@ steps:
     cp snmp.yml ../
   displayName: 'Build snmp.yml'
 - script: |
-    docker build -t $(dockerId).azurecr.io/$(imageName) .
+    docker build -f Dockerfile.snmp -t $(dockerId).azurecr.io/$(imageName) .
     docker login -u $(dockerId) -p $(pswd) $(dockerId).azurecr.io
     docker push $(dockerId).azurecr.io/$(imageName)
   displayName: 'build snmp_exporter docker image'
