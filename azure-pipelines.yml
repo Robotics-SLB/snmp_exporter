@@ -40,4 +40,4 @@ steps:
     tags: |
       latest
       $(GitVersion.MajorMinorPatch)
-      $(Build.BuildId)
+      $(Build.BuildNumber)
