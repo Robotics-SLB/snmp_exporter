@@ -39,4 +39,4 @@ steps:
     repository: snmp_exporter
     tags: |
       latest
-      ${GitVersion.MajorMinorPatch}
+      $(GitVersion.MajorMinorPatch)
