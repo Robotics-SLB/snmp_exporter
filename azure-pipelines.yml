@@ -10,7 +10,7 @@ variables:
   imageName: snmp_exporter
 
 steps:
-
+- task: GitVersion@4
 - script: |
     cd generator
     make mibs
@@ -32,3 +32,4 @@ steps:
     repository: snmp_exporter
     tags: |
       latest
+      ${GitVersion.MajorMinorPatch}
