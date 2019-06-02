@@ -19,10 +19,14 @@ steps:
     ls -l
     cp snmp.yml ../
   displayName: 'Build snmp.yml'
-- script: |
-    docker build -f Dockerfile.snmp -t $(dockerId).azurecr.io/$(imageName) .
-    docker login -u $(dockerId) -p $(pswd) $(dockerId).azurecr.io
-    docker push $(dockerId).azurecr.io/$(imageName)
-  displayName: 'build snmp_exporter docker image'
-  env:
-    pswd: $(dockerPassword)        # Define dockerPassword in the Variables tab of this pipeline in Pipelines page of web interface
+- task: Docker@2
+  displayName: Login to ACR
+  inputs:
+    command: login
+    containerRegistry: "Marine Robotics Registry"
+- task: Docker@2
+  displayName: Build and Push
+  inputs:
+    command: buildAndPush
+    Dockerfile: Dockerfile.snmp
+    repository: snmp_exporter
