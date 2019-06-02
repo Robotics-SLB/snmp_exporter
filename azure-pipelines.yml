@@ -20,8 +20,8 @@ steps:
 - task: GitVersion@4
 - script: |
     echo $BUILD_BUILDNUMBER
-    echo ${BUILD_BUILDNUMBER//[+]/-}
-    echo "##vso[build.updatebuildnumber]${BUILD_BUILDNUMBER//+/- }"
+    echo ${BUILD_BUILDNUMBER//+/_}
+    echo "##vso[build.updatebuildnumber]${BUILD_BUILDNUMBER//+/_}"
 - script: |
     cd generator
     make mibs
