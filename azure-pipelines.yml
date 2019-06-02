@@ -19,9 +19,9 @@ steps:
   displayName: Update LD_LIBRARY_PATH for GitVersion
 - task: GitVersion@4
 - script: |
-    echo $Build_BuildNumber
-    echo ${Build_BuildNumber//[+]/-}
-    echo "##vso[build.updatebuildnumber]${Build_BuildNumber//+/- }"
+    echo $BUILD_BUILDNUMBER
+    echo ${BUILD_BUILDNUMBER//[+]/-}
+    echo "##vso[build.updatebuildnumber]${BUILD_BUILDNUMBER//+/- }"
 - script: |
     cd generator
     make mibs
