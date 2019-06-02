@@ -19,6 +19,8 @@ steps:
   displayName: Update LD_LIBRARY_PATH for GitVersion
 - task: GitVersion@4
 - script: |
+    echo ${Build.BuildNumber}
+    echo ${Build.BuildNumber//+/-}
     echo "##vso[build.updatebuildnumber]${Build.BuildNumber//+/- }"
 - script: |
     cd generator
