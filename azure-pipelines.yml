@@ -30,3 +30,5 @@ steps:
     command: buildAndPush
     Dockerfile: Dockerfile.snmp
     repository: snmp_exporter
+    tags: |
+      latest
